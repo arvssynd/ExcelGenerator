@@ -9,24 +9,25 @@ internal class ValuesMethods
         IXLWorksheet worksheet,
         Header[] headers,
         string[] columns,
-        T[] items,
+        Page<T> items,
         HashSet<string> numericColumns,
         HashSet<string> currencyColumns,
+        HashSet<string> dateTimeColumns,
         string? timeZone)
     {
-        if (items is not null && items.Length > 0)
+        if (items is not null && items.Items.Count > 0)
         {
-            for (int i = 1; i <= items.Length; i++)
+            for (int i = 1; i <= items.Items.Count; i++)
             {
                 for (int j = 1; j <= headers.Length; j++)
                 {
-                    var property = items[i - 1]?.GetType().GetProperty(headers[j - 1].ColumnName.ToUpper()) ?? items[i - 1]?.GetType().GetProperty(headers[j - 1].ColumnName);
+                    var property = items.Items[i - 1]?.GetType().GetProperty(headers[j - 1].ColumnName.ToUpper()) ?? items.Items[i - 1]?.GetType().GetProperty(headers[j - 1].ColumnName);
                     if (property is not null)
                     {
                         var type = property.PropertyType.Name;
                         if (type == Constants.DateTime || (property?.PropertyType?.GenericTypeArguments?.Any(x => x.Name == Constants.DateTime) ?? false))
                         {
-                            var date = (DateTime?)property.GetValue(items[i - 1]);
+                            var date = (DateTime?)property.GetValue(items.Items[i - 1]);
                             if (!string.IsNullOrWhiteSpace(timeZone) && date.HasValue)
                             {
                                 date = TimeZoneInfo.ConvertTime(date.Value, TimeZoneInfo.FindSystemTimeZoneById(timeZone));
@@ -36,39 +37,23 @@ internal class ValuesMethods
                         }
                         else if (type == Constants.Decimal || (property?.PropertyType?.GenericTypeArguments?.Any(x => x.Name == Constants.Decimal) ?? false))
                         {
-                            worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (decimal?)property?.GetValue(items[i - 1]);
+                            worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (decimal?)property?.GetValue(items.Items[i - 1]);
                         }
-                        else if (type == Constants.Integer || (property?.PropertyType?.GenericTypeArguments?.Any(x => x.Name == Constants.Integer) ?? false))
+                        else if (type == Constants.Double || (property?.PropertyType?.GenericTypeArguments?.Any(x => x.Name == Constants.Double) ?? false))
                         {
-                            worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (int?)property?.GetValue(items[i - 1]);
+                            worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (double?)property?.GetValue(items.Items[i - 1]);
+                        }
+                        else if (Constants.Integer.Contains(type) || (property?.PropertyType?.GenericTypeArguments?.Any(x => Constants.Integer.Contains(type)) ?? false))
+                        {
+                            worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (int?)property?.GetValue(items.Items[i - 1]);
+                        }
+                        else if (type == Constants.Boolean || (property?.PropertyType?.GenericTypeArguments?.Any(x => x.Name == Constants.Boolean) ?? false))
+                        {
+                            worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (bool?)property?.GetValue(items.Items[i - 1]) ?? false ? items.BooleanTrueTranslation : items.BooleanFalseTranslation;
                         }
                         else
                         {
-                            worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = property?.GetValue(items[i - 1])?.ToString();
-                        }
-
-                        if (numericColumns.Any(x => x == property!.Name))
-                        {
-                            if (string.IsNullOrWhiteSpace(headers[j - 1].NumericFormat))
-                            {
-                                worksheet.Cell($"{columns[j - 1]}{i + 1}").Style.NumberFormat.Format = "0.0";
-                            }
-                            else
-                            {
-                                worksheet.Cell($"{columns[j - 1]}{i + 1}").Style.NumberFormat.Format = headers[j - 1].NumericFormat;
-                            }
-                        }
-
-                        if (currencyColumns.Any(x => x == property!.Name))
-                        {
-                            if (string.IsNullOrWhiteSpace(headers[j - 1].CurrencyFormat))
-                            {
-                                worksheet.Cell($"{columns[j - 1]}{i + 1}").Style.NumberFormat.Format = "#,##0.00 €";
-                            }
-                            else
-                            {
-                                worksheet.Cell($"{columns[j - 1]}{i + 1}").Style.NumberFormat.Format = headers[j - 1].CurrencyFormat;
-                            }
+                            worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = property?.GetValue(items.Items[i - 1])?.ToString();
                         }
                     }
                 }
@@ -79,18 +64,60 @@ internal class ValuesMethods
             worksheet.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
             worksheet.Style.Border.OutsideBorderColor = XLColor.Black;
 
+            if (numericColumns.Count != 0)
+            {
+                foreach (var column in numericColumns)
+                {
+                    var _col = worksheet.ColumnsUsed(x => x.FirstCell().GetString() == column);
+                    if (string.IsNullOrWhiteSpace(headers.FirstOrDefault(x => x.ColumnName == column)?.NumericFormat))
+                    {
+                        _col.Style.NumberFormat.Format = "0.0";
+                    }
+                    else
+                    {
+                        _col.Style.NumberFormat.Format = headers.FirstOrDefault(x => x.ColumnName == column)?.NumericFormat;
+                    }
+                }
+            }
+
+            if (currencyColumns.Count != 0)
+            {
+                foreach (var column in currencyColumns)
+                {
+                    var _col = worksheet.ColumnsUsed(x => x.FirstCell().GetString() == column);
+                    if (string.IsNullOrWhiteSpace(headers.FirstOrDefault(x => x.ColumnName == column)?.CurrencyFormat))
+                    {
+                        _col.Style.NumberFormat.Format = "#,##0.00 €";
+                    }
+                    else
+                    {
+                        _col.Style.NumberFormat.Format = headers.FirstOrDefault(x => x.ColumnName == column)?.CurrencyFormat;
+                    }
+                }
+            }
+
+            if (dateTimeColumns.Count != 0 && !string.IsNullOrWhiteSpace(items.DateTimeFormat))
+            {
+                foreach (var column in dateTimeColumns)
+                {
+                    var _col = worksheet.ColumnsUsed(x => x.FirstCell().GetString() == column);
+                    _col.Style.DateFormat.Format = items.DateTimeFormat;
+                }
+            }
+
             if (headers.Any(x => !string.IsNullOrWhiteSpace(x.FontName) || x.FontSize.HasValue))
             {
-                for (int i = 1; i <= headers.Length; i++)
+                foreach (var column in headers.Where(x => !string.IsNullOrWhiteSpace(x.FontName) || x.FontSize.HasValue))
                 {
-                    if (!string.IsNullOrWhiteSpace(headers[i - 1].FontName))
+                    var _col = worksheet.ColumnsUsed(x => x.FirstCell().GetString() == (column.Translation ?? column.ColumnName));
+                    if (!string.IsNullOrWhiteSpace(column.FontName))
                     {
-                        worksheet.Cell($"{columns[i - 1]}1").Style.Font.FontName = headers[i - 1].FontName;
+                        _col.Style.Font.FontName = column.FontName;
                     }
 
-                    if (headers[i - 1].FontSize.HasValue)
+                    if (column.FontSize.HasValue)
                     {
-                        worksheet.Cell($"{columns[i - 1]}1").Style.Font.FontSize = headers[i - 1].FontSize ?? 0;
+                        _col.Style.Font.FontSize = column.FontSize ?? 0;
                     }
                 }
             }

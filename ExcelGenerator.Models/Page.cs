@@ -18,7 +18,7 @@ public class Page<T>
     public HashSet<Header> Headers { get; set; } = [];
 
     /// <summary>
-    /// Colonne numeriche
+    /// Colonne numeriche non intere
     /// </summary>
     public HashSet<string> NumericColumns { get; set; } = [];
 
@@ -27,10 +27,31 @@ public class Page<T>
     /// </summary>
     public HashSet<string> CurrencyColumns { get; set; } = [];
 
+
+    /// <summary>
+    /// Colonne in formato data
+    /// </summary>
+    public HashSet<string> DateTimeColumns { get; set; } = [];
+
     /// <summary>
     /// Timezone in cui convertire le date
     /// </summary>
     public string? TimeZone { get; set; }
+
+    /// <summary>
+    /// Formato delle date
+    /// </summary>
+    public string? DateTimeFormat { get; set; }
+
+    /// <summary>
+    /// Valore da mostrare se il campo booleano è true
+    /// </summary>
+    public string? BooleanTrueTranslation { get; set; }
+
+    /// <summary>
+    /// Valore da mostrare se il campo booleano è false
+    /// </summary>
+    public string? BooleanFalseTranslation { get; set; }
 
     /// <summary>
     /// Formato dell'excel

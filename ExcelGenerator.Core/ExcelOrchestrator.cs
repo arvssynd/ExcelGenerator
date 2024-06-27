@@ -13,15 +13,16 @@ public static class ExcelOrchestrator
             foreach (var page in data)
             {
                 var worksheet = workbook.Worksheets.Add(page.PageName);
-                string[] columns = Generate().Take(page.Headers.Count).ToArray();
-                HeaderMethods.TableHeaderCreation(worksheet, page.Headers, columns);
+                string[] columns = [.. Generate(page.Headers.Count)];
+                HeaderMethods.TableHeaderCreation(worksheet, page.Headers, columns.Select(x => $"{x}1").ToArray());
                 ValuesMethods.TableValuesCreation(
                     worksheet,
                     [.. page.Headers],
                     columns,
-                    [.. data],
+                    page,
                     page.NumericColumns ?? [],
                     page.CurrencyColumns ?? [],
+                    page.DateTimeColumns ?? [],
                     page.TimeZone);
             }
 
@@ -32,15 +33,26 @@ public static class ExcelOrchestrator
         return fs;
     }
 
-    private static string ToBase26(long i)
+    private static List<string> Generate(int numberOfColumns)
     {
-        if (i == 0) return ""; i--;
-        return ToBase26(i / 26) + (char)('A' + i % 26);
+        var columns = new List<string>();
+        for (int i = 0; i < numberOfColumns; i++)
+        {
+            columns.Add(GetExcelColumnName(i + 1));
+        }
+
+        return columns;
     }
 
-    private static IEnumerable<string> Generate()
+    private static string GetExcelColumnName(int columnIndex)
     {
-        long n = 0;
-        while (true) yield return ToBase26(++n);
+        string columnName = string.Empty;
+        while (columnIndex > 0)
+        {
+            int modulo = (columnIndex - 1) % 26;
+            columnName = Convert.ToChar(65 + modulo) + columnName;
+            columnIndex = (columnIndex - 1) / 26;
+        }
+        return columnName;
     }
 }

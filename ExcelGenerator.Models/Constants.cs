@@ -6,6 +6,8 @@ public record Constants
     public const int DefaultFontSize = 11;
 
     public const string DateTime = "DateTime";
-    public const string Integer = "Integer";
+    public static string[] Integer = ["Integer", "Int32"];
     public const string Decimal = "Decimal";
+    public const string Double = "Double";
+    public const string Boolean = "Boolean";
 }

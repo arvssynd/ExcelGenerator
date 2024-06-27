@@ -10,7 +10,7 @@ internal class HeaderMethods
         int index = 1;
         foreach (Header header in headers)
         {
-            worksheet.Cell($"{columns[index - 1]}1").Value = header.Translation ?? header.ColumnName;
+            worksheet.Cell($"{columns[index - 1]}").Value = header.Translation ?? header.ColumnName;
             index++;
         }
 
