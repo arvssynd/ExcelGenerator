@@ -27,11 +27,15 @@ public class Page<T>
     /// </summary>
     public HashSet<string> CurrencyColumns { get; set; } = [];
 
-
     /// <summary>
     /// Colonne in formato data
     /// </summary>
     public HashSet<string> DateTimeColumns { get; set; } = [];
+
+    /// <summary>
+    /// Se non si specificano le colonne si può specificare quali escludere
+    /// </summary>
+    public HashSet<string> ExcludedColumns { get; set; } = [];
 
     /// <summary>
     /// Timezone in cui convertire le date

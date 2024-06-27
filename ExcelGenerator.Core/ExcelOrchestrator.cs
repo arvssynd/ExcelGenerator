@@ -13,8 +13,20 @@ public static class ExcelOrchestrator
             foreach (var page in data)
             {
                 var worksheet = workbook.Worksheets.Add(page.PageName);
+                if (page.Headers.Count == 0 && page.Items.FirstOrDefault()?.GetType().GetProperties() is not null)
+                {
+                    page.Headers = page.Items.First()!.GetType().GetProperties().Select(x => new Header() { ColumnName = x.Name }).ToHashSet();
+                }
                 string[] columns = [.. Generate(page.Headers.Count)];
-                HeaderMethods.TableHeaderCreation(worksheet, page.Headers, columns.Select(x => $"{x}1").ToArray());
+
+                // header
+                HeaderMethods.TableHeaderCreation(
+                    worksheet,
+                    page.Headers,
+                    page.ExcludedColumns ?? [],
+                    columns.Select(x => $"{x}1").ToArray());
+
+                // values
                 ValuesMethods.TableValuesCreation(
                     worksheet,
                     [.. page.Headers],
@@ -23,6 +35,7 @@ public static class ExcelOrchestrator
                     page.NumericColumns ?? [],
                     page.CurrencyColumns ?? [],
                     page.DateTimeColumns ?? [],
+                    page.ExcludedColumns ?? [],
                     page.TimeZone);
             }
 

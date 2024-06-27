@@ -41,31 +41,32 @@ namespace ExcelGenerator.Test
                     DateTimeColumns = ["HeaderDateTime5"],
                     DateTimeFormat = "dd/MM/yyyy HH:ss",
                     PageName = "Test1",
-                    Headers =
-                    [
-                        new Header
-                        {
-                            ColumnName = "HeaderString1",
-                            Translation = "TraduzioneHeaderString1"
-                        },
-                        new Header
-                        {
-                            ColumnName = "HeaderInteger2",
-                            FontSize = 12
-                        },
-                        new Header
-                        {
-                            ColumnName = "HeaderDouble3"
-                        },
-                        new Header
-                        {
-                            ColumnName = "HeaderDateTime5"
-                        },
-                        new Header
-                        {
-                            ColumnName = "HeaderCurrency6"
-                        }
-                    ]
+                    ExcludedColumns = ["HeaderBoolean4"]
+                    //Headers =
+                    //[
+                    //    new Header
+                    //    {
+                    //        ColumnName = "HeaderString1",
+                    //        Translation = "TraduzioneHeaderString1"
+                    //    },
+                    //    new Header
+                    //    {
+                    //        ColumnName = "HeaderInteger2",
+                    //        FontSize = 12
+                    //    },
+                    //    new Header
+                    //    {
+                    //        ColumnName = "HeaderDouble3"
+                    //    },
+                    //    new Header
+                    //    {
+                    //        ColumnName = "HeaderDateTime5"
+                    //    },
+                    //    new Header
+                    //    {
+                    //        ColumnName = "HeaderCurrency6"
+                    //    }
+                    //]
                 },
                 new Page<TestModel>
                 {
