@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using ExcelGenerator.Models;
 
 namespace ExcelGenerator.Core;
 
@@ -10,13 +9,15 @@ public static class ExcelOrchestrator
         Stream fs = new MemoryStream();
         using (var workbook = new XLWorkbook())
         {
+            var index = 1;
             foreach (var page in data)
             {
-                var worksheet = workbook.Worksheets.Add(page.PageName);
+                var worksheet = workbook.Worksheets.Add(!string.IsNullOrWhiteSpace(page.PageName) ? page.PageName : $"Page {index}");
                 if (page.Headers.Count == 0 && page.Items.FirstOrDefault()?.GetType().GetProperties() is not null)
                 {
-                    page.Headers = page.Items.First()!.GetType().GetProperties().Select(x => new Header() { ColumnName = x.Name }).ToHashSet();
+                    page.Headers = page.Items.First()!.GetType().GetProperties().Select(x => new Header() { ColumnName = x.Name }).ToHashSet();                    
                 }
+                page.Headers = page.Headers.Where(x => !page.ExcludedColumns!.Contains(x.ColumnName)).ToHashSet();
                 string[] columns = [.. Generate(page.Headers.Count)];
 
                 // header
@@ -37,6 +38,8 @@ public static class ExcelOrchestrator
                     page.DateTimeColumns ?? [],
                     page.ExcludedColumns ?? [],
                     page.TimeZone);
+
+                index++;
             }
 
             workbook.SaveAs(fs);

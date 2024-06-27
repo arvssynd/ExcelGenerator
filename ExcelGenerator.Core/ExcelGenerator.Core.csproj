@@ -10,8 +10,4 @@
     <PackageReference Include="ClosedXML" Version="0.102.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ExcelGenerator.Models\ExcelGenerator.Models.csproj" />
-  </ItemGroup>
-
 </Project>

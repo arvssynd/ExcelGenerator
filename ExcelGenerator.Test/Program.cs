@@ -1,5 +1,4 @@
 ﻿using ExcelGenerator.Core;
-using ExcelGenerator.Models;
 
 namespace ExcelGenerator.Test
 {
@@ -42,31 +41,6 @@ namespace ExcelGenerator.Test
                     DateTimeFormat = "dd/MM/yyyy HH:ss",
                     PageName = "Test1",
                     ExcludedColumns = ["HeaderBoolean4"]
-                    //Headers =
-                    //[
-                    //    new Header
-                    //    {
-                    //        ColumnName = "HeaderString1",
-                    //        Translation = "TraduzioneHeaderString1"
-                    //    },
-                    //    new Header
-                    //    {
-                    //        ColumnName = "HeaderInteger2",
-                    //        FontSize = 12
-                    //    },
-                    //    new Header
-                    //    {
-                    //        ColumnName = "HeaderDouble3"
-                    //    },
-                    //    new Header
-                    //    {
-                    //        ColumnName = "HeaderDateTime5"
-                    //    },
-                    //    new Header
-                    //    {
-                    //        ColumnName = "HeaderCurrency6"
-                    //    }
-                    //]
                 },
                 new Page<TestModel>
                 {
@@ -74,8 +48,6 @@ namespace ExcelGenerator.Test
                     CurrencyColumns = ["HeaderCurrency6"],
                     NumericColumns = ["HeaderDouble3"],
                     DateTimeColumns = ["HeaderDateTime5"],
-                    DateTimeFormat = "dd/MM/yyyy HH:ss",
-                    PageName = "Test2",
                     BooleanTrueTranslation = "Sì",
                     BooleanFalseTranslation = "No",
                     Headers =
@@ -119,10 +91,6 @@ namespace ExcelGenerator.Test
             }
 
             Console.WriteLine("Excel file saved successfully.");
-
-            // TODO
-            // Test senza header
-            // Generatore di header che elenca quelli da escludere
         }
 
         private class TestModel

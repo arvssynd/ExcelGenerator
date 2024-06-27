@@ -1,4 +1,4 @@
-﻿namespace ExcelGenerator.Models;
+﻿namespace ExcelGenerator.Core;
 
 public class Page<T>
 {

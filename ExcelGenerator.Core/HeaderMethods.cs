@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using ExcelGenerator.Models;
 
 namespace ExcelGenerator.Core;
 

@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelGenerator.Core", "ExcelGenerator.Core\ExcelGenerator.Core.csproj", "{5227974F-F0D9-4EAF-833A-1E744E3682DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelGenerator.Core", "ExcelGenerator.Core\ExcelGenerator.Core.csproj", "{5227974F-F0D9-4EAF-833A-1E744E3682DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelGenerator.Models", "ExcelGenerator.Models\ExcelGenerator.Models.csproj", "{A268D287-A95A-4E4F-BA5B-45D74E75F341}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelGenerator.Test", "ExcelGenerator.Test\ExcelGenerator.Test.csproj", "{83FC7F39-8F50-40C9-A153-D8A9F4402C22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelGenerator.Test", "ExcelGenerator.Test\ExcelGenerator.Test.csproj", "{83FC7F39-8F50-40C9-A153-D8A9F4402C22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{5227974F-F0D9-4EAF-833A-1E744E3682DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5227974F-F0D9-4EAF-833A-1E744E3682DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5227974F-F0D9-4EAF-833A-1E744E3682DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A268D287-A95A-4E4F-BA5B-45D74E75F341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A268D287-A95A-4E4F-BA5B-45D74E75F341}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A268D287-A95A-4E4F-BA5B-45D74E75F341}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A268D287-A95A-4E4F-BA5B-45D74E75F341}.Release|Any CPU.Build.0 = Release|Any CPU
 		{83FC7F39-8F50-40C9-A153-D8A9F4402C22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{83FC7F39-8F50-40C9-A153-D8A9F4402C22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83FC7F39-8F50-40C9-A153-D8A9F4402C22}.Release|Any CPU.ActiveCfg = Release|Any CPU
