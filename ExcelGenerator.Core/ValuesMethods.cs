@@ -29,7 +29,7 @@ internal static class ValuesMethods
                             if (type == Constants.DateTime || (property?.PropertyType?.GenericTypeArguments?.Any(x => x.Name == Constants.DateTime) ?? false))
                             {
                                 var date = (DateTime?)property.GetValue(items.Items[i - 1]);
-                                if (!string.IsNullOrWhiteSpace(timeZone) && date.HasValue)
+                                if (date.HasValue && !string.IsNullOrWhiteSpace(timeZone))
                                 {
                                     date = TimeZoneInfo.ConvertTime(date.Value, TimeZoneInfo.FindSystemTimeZoneById(timeZone));
                                 }
@@ -134,7 +134,7 @@ internal static class ValuesMethods
 
                         if (column.FontSize.HasValue)
                         {
-                            _col.Style.Font.FontSize = column.FontSize ?? 0;
+                            _col.Style.Font.FontSize = column.FontSize ?? Constants.DefaultFontSize;
                         }
                     }
                 }
