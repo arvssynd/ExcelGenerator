@@ -2,10 +2,9 @@
 
 namespace ExcelGenerator.Core;
 
-internal class ValuesMethods
+internal static class ValuesMethods
 {
-    internal static void TableValuesCreation<T>(
-        IXLWorksheet worksheet,
+    internal static void TableValuesCreation<T>(this IXLWorksheet worksheet,
         Header[] headers,
         string[] columns,
         Page<T> items,
@@ -49,6 +48,10 @@ internal class ValuesMethods
                             {
                                 worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (int?)property?.GetValue(items.Items[i - 1]);
                             }
+                            else if (Constants.Long.Contains(type) || (property?.PropertyType?.GenericTypeArguments?.Any(x => Constants.Long.Contains(type)) ?? false))
+                            {
+                                worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (long?)property?.GetValue(items.Items[i - 1]);
+                            }
                             else if (type == Constants.Boolean || (property?.PropertyType?.GenericTypeArguments?.Any(x => x.Name == Constants.Boolean) ?? false))
                             {
                                 worksheet.Cell($"{columns[j - 1]}{i + 1}").Value = (bool?)property?.GetValue(items.Items[i - 1]) ?? false ? items.BooleanTrueTranslation : items.BooleanFalseTranslation;
@@ -76,7 +79,7 @@ internal class ValuesMethods
                         var _col = worksheet.ColumnsUsed(x => x.FirstCell().GetString() == column);
                         if (string.IsNullOrWhiteSpace(headers.FirstOrDefault(x => x.ColumnName == column)?.NumericFormat))
                         {
-                            _col.Style.NumberFormat.Format = "0.0";
+                            _col.Style.NumberFormat.Format = Constants.DefaultNumericFormat;
                         }
                         else
                         {
@@ -95,7 +98,7 @@ internal class ValuesMethods
                         var _col = worksheet.ColumnsUsed(x => x.FirstCell().GetString() == column);
                         if (string.IsNullOrWhiteSpace(headers.FirstOrDefault(x => x.ColumnName == column)?.CurrencyFormat))
                         {
-                            _col.Style.NumberFormat.Format = "#,##0.00 €";
+                            _col.Style.NumberFormat.Format = Constants.DefaultCurrencyFormat;
                         }
                         else
                         {

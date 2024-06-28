@@ -12,32 +12,40 @@ public static class ExcelOrchestrator
             var index = 1;
             foreach (var page in data)
             {
+                // page
                 var worksheet = workbook.Worksheets.Add(!string.IsNullOrWhiteSpace(page.PageName) ? page.PageName : $"Page {index}");
-                if (page.Headers.Count == 0 && page.Items.FirstOrDefault()?.GetType().GetProperties() is not null)
+
+                switch (page.Format)
                 {
-                    page.Headers = page.Items.First()!.GetType().GetProperties().Select(x => new Header() { ColumnName = x.Name }).ToHashSet();                    
+                    case Enums.PageFormat.Table:
+                        // header
+                        page.GenerateHeaders();
+                        string[] columns = [.. Generate(page.Headers.Count)];
+                        worksheet.TableHeaderCreation(
+                            page.Headers,
+                            page.ExcludedColumns ?? [],
+                            columns.Select(x => $"{x}1").ToArray()
+                        );
+
+                        // values
+                        worksheet.TableValuesCreation(
+                            [.. page.Headers],
+                            columns,
+                            page,
+                            page.NumericColumns ?? [],
+                            page.CurrencyColumns ?? [],
+                            page.DateTimeColumns ?? [],
+                            page.ExcludedColumns ?? [],
+                            page.TimeZone
+                        );
+
+                        // TODO footer tabella
+                        break;
+                    case Enums.PageFormat.PaySlip:
+                        break;
+                    default:
+                        break;
                 }
-                page.Headers = page.Headers.Where(x => !page.ExcludedColumns!.Contains(x.ColumnName)).ToHashSet();
-                string[] columns = [.. Generate(page.Headers.Count)];
-
-                // header
-                HeaderMethods.TableHeaderCreation(
-                    worksheet,
-                    page.Headers,
-                    page.ExcludedColumns ?? [],
-                    columns.Select(x => $"{x}1").ToArray());
-
-                // values
-                ValuesMethods.TableValuesCreation(
-                    worksheet,
-                    [.. page.Headers],
-                    columns,
-                    page,
-                    page.NumericColumns ?? [],
-                    page.CurrencyColumns ?? [],
-                    page.DateTimeColumns ?? [],
-                    page.ExcludedColumns ?? [],
-                    page.TimeZone);
 
                 index++;
             }
@@ -49,15 +57,12 @@ public static class ExcelOrchestrator
         return fs;
     }
 
-    private static List<string> Generate(int numberOfColumns)
+    private static IEnumerable<string> Generate(int numberOfColumns)
     {
-        var columns = new List<string>();
         for (int i = 0; i < numberOfColumns; i++)
         {
-            columns.Add(GetExcelColumnName(i + 1));
+            yield return GetExcelColumnName(i + 1);
         }
-
-        return columns;
     }
 
     private static string GetExcelColumnName(int columnIndex)
@@ -69,6 +74,7 @@ public static class ExcelOrchestrator
             columnName = Convert.ToChar(65 + modulo) + columnName;
             columnIndex = (columnIndex - 1) / 26;
         }
+
         return columnName;
     }
 }

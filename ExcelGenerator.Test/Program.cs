@@ -101,6 +101,7 @@ namespace ExcelGenerator.Test
             public bool HeaderBoolean4 { get; set; }
             public DateTime HeaderDateTime5 { get; set; }
             public decimal HeaderCurrency6 { get; set; }
+            public long HeaderLongTest { get; set; }
         }
     }
 }
