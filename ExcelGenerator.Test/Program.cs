@@ -79,6 +79,10 @@ namespace ExcelGenerator.Test
                             ColumnName = "HeaderBoolean4"
                         },
                     ]
+                },
+                new Page<TestModel>
+                {
+                    Items = model
                 }
             ];
 

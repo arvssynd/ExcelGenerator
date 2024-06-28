@@ -50,12 +50,12 @@ public class Page<T>
     /// <summary>
     /// Valore da mostrare se il campo booleano è true
     /// </summary>
-    public string? BooleanTrueTranslation { get; set; }
+    public string? BooleanTrueTranslation { get; set; } = "True";
 
     /// <summary>
     /// Valore da mostrare se il campo booleano è false
     /// </summary>
-    public string? BooleanFalseTranslation { get; set; }
+    public string? BooleanFalseTranslation { get; set; } = "False";
 
     /// <summary>
     /// Formato dell'excel
