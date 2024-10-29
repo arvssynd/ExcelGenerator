@@ -5,7 +5,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Dgroove.Custom.ExcelGenerator</PackageId>
+    <PackageIcon>images.jpg</PackageIcon>
+    <Version>1.0.1</Version>
+    <Title>Generatore Excel appoggiandosi alla libreria ClosedXML</Title>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\Users\giacomo.caldironi\Desktop\images.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.2" />
