@@ -1,10 +1,11 @@
 ﻿using ClosedXML.Excel;
+using System.Text;
 
 namespace ExcelGenerator.Core;
 
 public static class ExcelOrchestrator
 {
-    public static Stream GenerateExcel<T>(this List<Page<T>> data)
+    public static Stream GenerateExcel<T>(this List<Page<T>> data, Enums.FileFormat fileFormat = Enums.FileFormat.Xlsx)
     {
         Stream fs = new MemoryStream();
         using (var workbook = new XLWorkbook())
@@ -39,6 +40,21 @@ public static class ExcelOrchestrator
                             page.TimeZone
                         );
 
+                        // image
+                        foreach (var img in page.Images)
+                        {
+                            switch (img.Position)
+                            {
+                                case Enums.ImagePosition.TableRight:
+                                    worksheet.AddImage(img.Base64, $"{columns.Last()}2");
+                                    break;
+                                case Enums.ImagePosition.TableBottom:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
                         // TODO footer tabella
                         break;
                     case Enums.PageFormat.PaySlip:
@@ -50,11 +66,44 @@ public static class ExcelOrchestrator
                 index++;
             }
 
-            workbook.SaveAs(fs);
+            //workbook.SaveAs(fs);
+
+            switch (fileFormat)
+            {
+                case Enums.FileFormat.CsvComma:
+                    workbook.TransformXlsxStreamToCsvStream(fs, ",");
+                    break;
+                case Enums.FileFormat.CsvSemiColon:
+                    workbook.TransformXlsxStreamToCsvStream(fs);
+                    break;
+                case Enums.FileFormat.Xlsx:
+                default:
+                    workbook.SaveAs(fs);
+                    fs.Position = 0;
+                    break;
+            }
         }
 
-        fs.Position = 0;
         return fs;
+    }
+
+    private static Stream TransformXlsxStreamToCsvStream(this XLWorkbook workbook, Stream memoryStream, string separator = ";")
+    {
+        using (var writer = new StreamWriter(memoryStream, encoding: Encoding.UTF8, leaveOpen: true))
+        {
+            foreach (var worksheet in workbook.Worksheets)
+            {
+                foreach (var row in worksheet.RowsUsed())
+                {
+                    var line = string.Join(separator, row.Cells(1, row.LastCellUsed().Address.ColumnNumber).Select(cell => cell.GetValue<string>()));
+                    writer.WriteLine(line);
+                }
+
+                writer.WriteLine();
+            }
+        }
+
+        return memoryStream;
     }
 
     private static IEnumerable<string> Generate(int numberOfColumns)

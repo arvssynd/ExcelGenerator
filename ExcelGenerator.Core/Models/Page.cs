@@ -64,4 +64,6 @@ public class Page<T>
     /// ...
     /// </summary>
     public Enums.PageFormat Format { get; set; } = Enums.PageFormat.Table;
+
+    public HashSet<Image> Images { get; set; } = [];
 }
