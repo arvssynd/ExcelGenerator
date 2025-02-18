@@ -88,11 +88,13 @@ namespace ExcelGenerator.Test
                 //}
             ];
 
-            //var excelStream = ExcelOrchestrator.GenerateExcel(pages);
-            //string localFilePath = $"{DateTime.Now:yyyyMMdd HHmmss}-Excel.xlsx";
+            // xlsx
+            var excelStream = ExcelOrchestrator.GenerateExcel(pages);
+            string localFilePath = $"{DateTime.Now:yyyyMMdd HHmmss}-Excel.xlsx";
 
-            var excelStream = ExcelOrchestrator.GenerateExcel(pages, Enums.FileFormat.CsvComma);
-            string localFilePath = $"{DateTime.Now:yyyyMMdd HHmmss}-Excel.csv";
+            // csv
+            //var excelStream = ExcelOrchestrator.GenerateExcel(pages, Enums.FileFormat.CsvComma);
+            //string localFilePath = $"{DateTime.Now:yyyyMMdd HHmmss}-Excel.csv";
 
             excelStream.Position = 0;
             using (FileStream fileStream = new(localFilePath, FileMode.Create, FileAccess.Write))
