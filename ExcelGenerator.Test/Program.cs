@@ -34,58 +34,52 @@ namespace ExcelGenerator.Test
             [
                 new Page<TestModel>
                 {
-                    Items = model,
-                    //BooleanTrueTranslation = "Sì",
-                    //BooleanFalseTranslation = "No",
-                    CurrencyColumns = ["HeaderCurrency6"],
-                    NumericColumns = ["HeaderDouble3"],
-                    DateTimeColumns = ["HeaderDateTime5"],
-                    DateTimeFormat = "dd/MM/yyyy HH:ss",
-                    PageName = "Test1",
-                    ExcludedColumns = ["HeaderBoolean4"]
+                    Items = model, // your data set
+                    BooleanTrueTranslation = "Sì",  // value displayed if the boolean is true, prints true if nothing is specified
+                    BooleanFalseTranslation = "No", // value displayed if the boolean is false, prints false if nothing is specified
+                    CurrencyColumns = ["HeaderCurrency6"],  // columns displayed in currency format
+                    NumericColumns = ["HeaderDouble3"], // columns displayed in numeric format
+                    DateTimeColumns = ["HeaderDateTime5"], // columns displayed in datetime format
+                    DateTimeFormat = "dd/MM/yyyy HH:ss",    // date time format
+                    PageName = "Test1", // excel page title
+                    ExcludedColumns = ["HeaderBoolean4"],   // columns to exclude
+                    Headers = // headers to print and specs, if headers is not specified all the Items properties will be displayed
+                    [
+                        new Header
+                        {
+                            ColumnName = "HeaderString1",
+                            Translation = "TraduzioneHeaderString1"
+                        },
+                        new Header
+                        {
+                            ColumnName = "HeaderInteger2",
+                            FontSize = 12
+                        },
+                        new Header
+                        {
+                            ColumnName = "HeaderDouble3"
+                        },
+                        new Header
+                        {
+                            ColumnName = "HeaderDateTime5"
+                        },
+                        new Header
+                        {
+                            ColumnName = "HeaderCurrency6",
+                            CurrencyFormat = "example_format"
+                        },
+                        new Header
+                        {
+                            ColumnName = "HeaderBoolean4"
+                        },
+                    ],
+                    TimeZone = "Europe/Rome" // timezone supported by TimeZoneInfo.FindSystemTimeZoneById
                 },
-                //new Page<TestModel>
-                //{
-                //    Items = model,
-                //    CurrencyColumns = ["HeaderCurrency6"],
-                //    NumericColumns = ["HeaderDouble3"],
-                //    DateTimeColumns = ["HeaderDateTime5"],
-                //    BooleanTrueTranslation = "Sì",
-                //    BooleanFalseTranslation = "No",
-                //    Headers =
-                //    [
-                //        new Header
-                //        {
-                //            ColumnName = "HeaderString1",
-                //            Translation = "TraduzioneHeaderString1"
-                //        },
-                //        new Header
-                //        {
-                //            ColumnName = "HeaderInteger2",
-                //            FontSize = 12
-                //        },
-                //        new Header
-                //        {
-                //            ColumnName = "HeaderDouble3"
-                //        },
-                //        new Header
-                //        {
-                //            ColumnName = "HeaderDateTime5"
-                //        },
-                //        new Header
-                //        {
-                //            ColumnName = "HeaderCurrency6"
-                //        },
-                //        new Header
-                //        {
-                //            ColumnName = "HeaderBoolean4"
-                //        },
-                //    ]
-                //},
-                //new Page<TestModel>
-                //{
-                //    Items = model
-                //}
+                new Page<TestModel>
+                {
+                    // you can also create a page specifying only the dataset
+                    Items = model
+                }
             ];
 
             // xlsx
