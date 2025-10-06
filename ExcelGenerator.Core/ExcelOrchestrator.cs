@@ -16,6 +16,11 @@ public static class ExcelOrchestrator
                 // page
                 var worksheet = workbook.Worksheets.Add(!string.IsNullOrWhiteSpace(page.PageName) ? page.PageName : $"Page {index}");
 
+                if (page.Items is null || page.Items.Count == 0)
+                {
+                    continue;
+                }
+
                 switch (page.Format)
                 {
                     case Enums.PageFormat.Table:

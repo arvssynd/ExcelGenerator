@@ -34,7 +34,7 @@ namespace ExcelGenerator.Test
             [
                 new Page<TestModel>
                 {
-                    Items = model, // your data set
+                    Items = [], // model, // your data set
                     BooleanTrueTranslation = "Sì",  // value displayed if the boolean is true, prints true if nothing is specified
                     BooleanFalseTranslation = "No", // value displayed if the boolean is false, prints false if nothing is specified
                     CurrencyColumns = ["HeaderCurrency6"],  // columns displayed in currency format
@@ -78,7 +78,7 @@ namespace ExcelGenerator.Test
                 new Page<TestModel>
                 {
                     // you can also create a page specifying only the dataset
-                    Items = model
+                    Items = [], //model
                 }
             ];
 
